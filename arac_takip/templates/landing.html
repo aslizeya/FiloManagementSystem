@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rota Asistanı - Yeni Nesil Filo Yönetimi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+            padding: 100px 0;
+        }
+        .feature-icon {
+            font-size: 3rem;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+        .navbar-brand { letter-spacing: 1px; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-cursor-fill me-1"></i> ROTA ASİSTANI
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{% url 'giris_yap' %}" class="btn btn-outline-light btn-sm fw-bold">Giriş Yap</a>
+                <a href="{% url 'kayit_ol' %}" class="btn btn-light btn-sm fw-bold text-primary">Kayıt Ol</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Filo Yönetiminde Yeni Çağ</h1>
+            <p class="lead mb-4 opacity-75">Duraklarınızı, araçlarınızı ve sürücülerinizi tek bir noktadan yönetin.<br>Karmaşaya son verin, Rota Asistanı ile kontrolü ele alın.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'kayit_ol' %}" class="btn btn-light btn-lg px-5 fw-bold text-primary shadow">Hemen Başla 🚀</a>
+                
+                <a href="{% url 'nasil_calisir' %}" class="btn btn-outline-light btn-lg px-4">Nasıl Çalışır?</a>
+                
+            </div>
+        </div>
+    </header>
+
+    <section id="ozellikler" class="py-5 bg-light">
+        <div class="container py-4">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-4">
+                        <div class="card-body">
+                            <i class="bi bi-building-gear feature-icon"></i>
+                            <h4 class="card-title fw-bold">Durak Yönetimi</h4>
+                            <p class="card-text text-muted">Kendi durağınızı kurun, bölgenizi belirleyin ve kurumsal kimliğinizi dijital dünyaya taşıyın.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-4">
+                        <div class="card-body">
+                            <i class="bi bi-car-front-fill feature-icon"></i>
+                            <h4 class="card-title fw-bold">Araç Takibi</h4>
+                            <p class="card-text text-muted">Hangi araç sahada, hangisi müsait anlık olarak görün. Kilometre takibiyle araç ömrünü uzatın.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-4">
+                        <div class="card-body">
+                            <i class="bi bi-people-fill feature-icon"></i>
+                            <h4 class="card-title fw-bold">Personel Sistemi</h4>
+                            <p class="card-text text-muted">Sürücülerinizi onay sistemiyle işe alın. Kim, hangi aracı, ne zaman kullandı raporlayın.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <small class="opacity-50">&copy; 2026 Rota Asistanı | Gazi YBS Projesi</small>
+        </div>
+    </footer>
+
+</body>
+</html>

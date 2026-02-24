@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rota Asistanı - Kontrol Paneli</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .navbar-brand { letter-spacing: 1px; font-weight: 700; }
+        .card-stats { transition: transform 0.2s; }
+        .card-stats:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 px-3 shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'arac_listesi' %}">
+        <i class="bi bi-cursor-fill me-1"></i> ROTA ASİSTANI
+    </a>
+    
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'arac_listesi' %}">Kontrol Paneli</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'tum_duraklar' %}">Durak Listesi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'suruculer' %}">👥 Sürücüler</a>
+            </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+            <div class="text-white text-end lh-1">
+                <div class="fw-bold">{{ user.first_name }} {{ user.last_name }}</div>
+                <small class="opacity-75" style="font-size: 0.75rem;">
+                    {{ user.profil.get_rol_display }}
+                    {% if durak %} | {{ durak.durak_adi }} {% endif %}
+                </small>
+            </div>
+
+            {% if rol == 'patron' and durak %}
+                <a href="{% url 'arac_ekle' %}" class="btn btn-light btn-sm fw-bold text-primary border-0">
+                    <i class="bi bi-plus-lg"></i> Araç Ekle
+                </a>
+            {% endif %}
+
+            <a href="{% url 'cikis_yap' %}" class="btn btn-danger btn-sm border-0">
+                <i class="bi bi-power"></i> Çıkış
+            </a>
+        </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+    {% if rol == 'patron' and not durak %}
+        <div class="text-center mt-5">
+            <div class="display-1 text-primary mb-3"><i class="bi bi-building-gear"></i></div>
+            <h2 class="fw-bold text-dark">Hoşgeldiniz, {{ user.first_name }} Bey!</h2>
+            <p class="lead text-secondary">Yönetime başlamak için lütfen durağınızı tanımlayın.</p>
+            <a href="{% url 'durak_olustur' %}" class="btn btn-lg btn-primary shadow px-5">
+                <i class="bi bi-plus-circle me-2"></i>Durağı Kur
+            </a>
+        </div>
+
+    {% elif rol == 'surucu' and not durak %}
+        <div class="card mx-auto shadow-sm border-0" style="max-width: 500px;">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 text-primary fw-bold"><i class="bi bi-person-badge me-2"></i>Personel Başvuru Formu</h5>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted small">Sistemdeki araçları görüntülemek için çalışacağınız durağı seçiniz.</p>
+                <form action="{% url 'duraaga_basvur' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Başvuru Yapılacak Durak</label>
+                        <select name="durak_id" class="form-select bg-light" required>
+                            <option value="">Seçiniz...</option>
+                            {% for d in tum_duraklar %}
+                                <option value="{{ d.id }}">{{ d.durak_adi }} ({{ d.bolge }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Başvuruyu Tamamla</button>
+                </form>
+            </div>
+        </div>
+
+    {% elif rol == 'surucu' and not onayli %}
+        <div class="alert alert-warning text-center shadow-sm border-warning" role="alert">
+            <h4 class="alert-heading text-warning-emphasis"><i class="bi bi-clock-history"></i> Onay Bekleniyor</h4>
+            <p><strong>{{ durak.durak_adi }}</strong> yönetimine bildirim gönderildi.</p>
+            <hr>
+            <p class="mb-0 small">Yönetici onayı sonrası panele erişim sağlanacaktır.</p>
+        </div>
+
+    {% else %}
+        
+        <div class="row mb-4">
+            <div class="col-md-3 col-6 mb-3">
+                <div class="card card-stats border-0 shadow-sm bg-primary text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0 opacity-75 small text-uppercase">Toplam Araç</h6>
+                                <h2 class="fw-bold mb-0">{{ istatistikler.toplam }}</h2>
+                            </div>
+                            <i class="bi bi-car-front-fill fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-6 mb-3">
+                <div class="card card-stats border-0 shadow-sm bg-success text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0 opacity-75 small text-uppercase">Müsait</h6>
+                                <h2 class="fw-bold mb-0">{{ istatistikler.musait }}</h2>
+                            </div>
+                            <i class="bi bi-check-circle-fill fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <div class="card card-stats border-0 shadow-sm bg-danger text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0 opacity-75 small text-uppercase">Sahada</h6>
+                                <h2 class="fw-bold mb-0">{{ istatistikler.sahada }}</h2>
+                            </div>
+                            <i class="bi bi-speedometer2 fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if rol == 'patron' %}
+            <div class="col-md-3 col-6 mb-3">
+                <div class="card card-stats border-0 shadow-sm bg-info text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0 opacity-75 small text-uppercase">Sürücüler</h6>
+                                <h2 class="fw-bold mb-0">{{ istatistikler.surucu_sayisi }}</h2>
+                            </div>
+                            <i class="bi bi-people-fill fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if rol == 'patron' and basvuru_bekleyenler %}
+        <div class="card mb-4 border-info shadow-sm">
+            <div class="card-header bg-info-subtle text-info-emphasis fw-bold">
+                <i class="bi bi-bell-fill me-2"></i>Personel Onay Bekleyenler
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for bekleyen in basvuru_bekleyenler %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-bold text-dark">{{ bekleyen.user.first_name }} {{ bekleyen.user.last_name }}</span>
+                        <span class="text-muted small ms-2">({{ bekleyen.user.username }})</span>
+                    </div>
+                    <a href="{% url 'surucu_onayla' bekleyen.id %}" class="btn btn-sm btn-success fw-bold px-3">
+                        <i class="bi bi-check-lg"></i> Onayla
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+            <h4 class="text-secondary fw-bold"><i class="bi bi-grid-fill me-2"></i>Araç Filosu</h4>
+            <span class="badge bg-secondary px-3 py-2">{{ durak.durak_adi }}</span>
+        </div>
+
+        <div class="row">
+            {% for arac in araclar %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 text-primary fw-bold" style="letter-spacing: 0.5px;">{{ arac.plaka }}</h5>
+                            {% if arac.durum %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Müsait</span>
+                            {% else %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Sahada</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-1 small">{{ arac.marka_model }} &bull; {{ arac.yil }}</p>
+                        <div class="mb-3 small bg-white border rounded p-2 text-secondary">
+                            <i class="bi bi-person-fill text-primary"></i> Sahibi: <strong>{{ arac.sahibi_adi }}</strong>
+                            {% if arac.sahibi_tel %}
+                                <br><i class="bi bi-telephone-fill text-success" style="font-size: 0.8rem;"></i> {{ arac.sahibi_tel }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3 bg-light p-2 rounded">
+                            <i class="bi bi-speedometer2 text-secondary me-2 fs-5"></i>
+                            <span class="fw-bold fs-5 text-dark">{{ arac.guncel_km }} km</span>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            {% if arac.durum %}
+                                <a href="{% url 'teslim_al' arac.id %}" class="btn btn-success fw-bold">
+                                    <i class="bi bi-key-fill me-1"></i> Teslim Al
+                                </a>
+                            {% else %}
+                                <a href="{% url 'teslim_et' arac.id %}" class="btn btn-warning text-dark fw-bold">
+                                    <i class="bi bi-stop-circle-fill me-1"></i> Teslim Et
+                                </a>
+                            {% endif %}
+                            
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'arac_gecmisi' arac.id %}" class="btn btn-outline-info text-dark border-info-subtle w-50">
+                                    <i class="bi bi-clipboard-data"></i> Kayıtlar
+                                </a>
+                                {% if rol == 'patron' %}
+                                <a href="{% url 'arac_satisi' arac.id %}" class="btn btn-outline-dark border-secondary w-50">
+                                    <i class="bi bi-arrow-left-right"></i> Devret
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <div class="col-12 text-center mt-5">
+                    <div class="text-muted opacity-50 display-4"><i class="bi bi-slash-circle"></i></div>
+                    <p class="text-muted fs-5 mt-2">Bu durakta henüz aktif araç bulunmuyor.</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

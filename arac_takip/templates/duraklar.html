@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Durak Listesi - Rota Asistanı</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .navbar-brand { letter-spacing: 1px; font-weight: 700; }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 px-3 shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'arac_listesi' %}">
+        <i class="bi bi-cursor-fill me-1"></i> ROTA ASİSTANI
+    </a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'arac_listesi' %}">Kontrol Paneli</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'tum_duraklar' %}">Durak Listesi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'suruculer' %}">👥 Sürücüler</a>
+            </li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+             <div class="text-white text-end lh-1">
+                <div class="fw-bold">{{ user.first_name }} {{ user.last_name }}</div>
+                <small class="opacity-75" style="font-size: 0.75rem;">
+                    {{ user.profil.get_rol_display }}
+                </small>
+            </div>
+            <a href="{% url 'cikis_yap' %}" class="btn btn-danger btn-sm border-0">
+                <i class="bi bi-power"></i> Çıkış
+            </a>
+        </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+    <div class="text-center mb-5">
+        <h3 class="fw-bold text-primary"><i class="bi bi-map-fill me-2"></i>Kayıtlı Lokasyonlar</h3>
+        <p class="text-muted">Sistemdeki tüm şubeler ve anlık araç durumları</p>
+    </div>
+    
+    <div class="row">
+        {% for mevcut_durak in duraklar %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100 hover-shadow">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom py-3">
+                    <h5 class="mb-0 text-dark fw-bold">
+                        <i class="bi bi-geo-alt-fill text-primary me-2"></i>{{ mevcut_durak.durak_adi }}
+                    </h5>
+                    <span class="badge bg-light text-dark border">{{ mevcut_durak.bolge }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3 text-secondary small">
+                        <i class="bi bi-person-fill me-1"></i> Yönetici: 
+                        <span class="fw-bold ms-1 text-dark">{{ mevcut_durak.sahibi.first_name }} {{ mevcut_durak.sahibi.last_name }}</span>
+                    </div>
+                    
+                    {% if mevcut_durak.arac_set.all %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0 align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-3">Plaka</th>
+                                        <th>KM</th>
+                                        <th class="text-end pe-3">Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for arac in mevcut_durak.arac_set.all %}
+                                    <tr>
+                                        <td class="ps-3 fw-bold text-primary small">{{ arac.plaka }}</td>
+                                        <td class="small text-muted">{{ arac.guncel_km }}</td>
+                                        <td class="text-end pe-3">
+                                            {% if arac.durum %}
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill" style="font-size: 0.7rem;">Müsait</span>
+                                            {% else %}
+                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill" style="font-size: 0.7rem;">Dolu</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-light text-center text-muted small border-0 py-4">
+                            <i class="bi bi-cone-striped d-block fs-4 mb-2 opacity-25"></i>
+                            Bu durakta henüz araç kaydı yok.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center border-0 shadow-sm">
+                    <i class="bi bi-info-circle-fill me-2"></i>Sistemde henüz kayıtlı durak bulunamadı.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

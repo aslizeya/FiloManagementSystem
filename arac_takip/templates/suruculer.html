@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sürücüler ve Personel - Rota Asistanı</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .navbar-brand { letter-spacing: 1px; font-weight: 700; }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 px-3 shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'arac_listesi' %}">
+        <i class="bi bi-cursor-fill me-1"></i> ROTA ASİSTANI
+    </a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="{% url 'arac_listesi' %}">Kontrol Paneli</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'tum_duraklar' %}">Durak Listesi</a></li>
+            <li class="nav-item"><a class="nav-link active fw-bold" href="{% url 'suruculer' %}">👥 Sürücüler</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+             <div class="text-white text-end lh-1">
+                <div class="fw-bold">{{ user.first_name }} {{ user.last_name }}</div>
+                <small class="opacity-75" style="font-size: 0.75rem;">
+                    {{ user.profil.get_rol_display }} | {{ durak.durak_adi }}
+                </small>
+            </div>
+            <a href="{% url 'cikis_yap' %}" class="btn btn-danger btn-sm border-0"><i class="bi bi-power"></i> Çıkış</a>
+        </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-primary mb-0"><i class="bi bi-people-fill me-2"></i>Ekip Arkadaşları</h3>
+            <p class="text-muted mb-0">{{ durak.durak_adi }} Personel Listesi</p>
+        </div>
+        <span class="badge bg-primary fs-6">{{ suruculer|length }} Kişi</span>
+    </div>
+
+    <div class="row">
+        {% for kisi in suruculer %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm h-100 {% if kisi.calisiyor_mu %}border-start border-success border-4{% else %}border-start border-secondary border-4{% endif %}">
+                <div class="card-body d-flex align-items-center gap-3">
+                    
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-person-circle fs-1 text-secondary opacity-50"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1 fw-bold text-dark">
+                            {{ kisi.ad_soyad }}
+                            {% if kisi.rol == 'Durak Sahibi' %}
+                                <i class="bi bi-patch-check-fill text-primary ms-1" title="Patron"></i>
+                            {% endif %}
+                        </h5>
+                        <p class="mb-1 text-muted small">@{{ kisi.kullanici_adi }}</p>
+                        
+                        {% if kisi.calisiyor_mu %}
+                            <div class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                <i class="bi bi-steering-wheel me-1"></i> Direksiyonda: {{ kisi.aktif_arac }}
+                            </div>
+                        {% else %}
+                            <div class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill">
+                                <i class="bi bi-cup-hot me-1"></i> Mola / Boşta
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Bu durakta henüz kimse yok.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

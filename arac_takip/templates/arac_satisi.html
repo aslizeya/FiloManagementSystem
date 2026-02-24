@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <title>Araç Satış / Devir</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+<div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-header bg-warning">
+        <h4>Araç Devir İşlemi</h4>
+    </div>
+    <div class="card-body">
+        <p><strong>Araç:</strong> {{ arac.plaka }}</p>
+        <p><strong>Mevcut Sahip:</strong> {{ arac.sahibi.username }}</p>
+        <hr>
+        <form method="POST">
+            {% csrf_token %}
+            <label class="form-label">Yeni Sahibi Seçin:</label>
+            <select name="yeni_sahip" class="form-select mb-3">
+                {% for kullanici in kullanicilar %}
+                    <option value="{{ kullanici.id }}">{{ kullanici.username }} ({{ kullanici.first_name }} {{ kullanici.last_name }})</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-success w-100">Devret / Satışı Onayla</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

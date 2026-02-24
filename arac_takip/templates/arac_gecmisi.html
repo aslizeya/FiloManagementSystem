@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Araç Geçmişi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>{{ arac.plaka }} - Son 5 Kullanım Kaydı</h2>
+        <a href="{% url 'arac_listesi' %}" class="btn btn-secondary">← Listeye Dön</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sürücü Adı</th>
+                        <th>Alış Zamanı</th>
+                        <th>Teslim Zamanı</th>
+                        <th>Yapılan KM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kayit in kayitlar %}
+                    <tr>
+                        <td>
+                            {% if kayit.surucu.first_name %}
+                                {{ kayit.surucu.first_name }} {{ kayit.surucu.last_name }}
+                            {% else %}
+                                {{ kayit.surucu.username }}
+                            {% endif %}
+                        </td>
+                        <td>{{ kayit.alis_zamani|date:"d M Y H:i" }}</td>
+                        <td>
+                            {% if kayit.teslim_zamani %}
+                                {{ kayit.teslim_zamani|date:"d M Y H:i" }}
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Hala Kullanımda</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if kayit.teslim_km %}
+                                <span class="fw-bold text-success">{{ kayit.yapilan_mesafe }} km</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4">
+                            <p class="text-muted mb-0">Bu araç için henüz kayıt bulunmuyor.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

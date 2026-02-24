@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Nasıl Çalışır? - Rota Asistanı</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .step-number {
+            background-color: #0d6efd;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .navbar-brand { letter-spacing: 1px; font-weight: 700; }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3 shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'anasayfa' %}">
+            <i class="bi bi-cursor-fill me-1"></i> ROTA ASİSTANI
+        </a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'kayit_ol' %}" class="btn btn-light btn-sm fw-bold text-primary">Hemen Başla</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5 text-center">
+    <h1 class="fw-bold text-primary mb-3">Sistem Nasıl İşliyor?</h1>
+    <p class="lead text-muted mx-auto" style="max-width: 700px;">
+        Rota Asistanı, durak sahipleri ve sürücüleri tek platformda buluşturur. 
+        Rolünüzü seçin ve yönetmeye başlayın.
+    </p>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                <div class="card-body">
+                    <div class="step-number mx-auto">1</div>
+                    <h5 class="fw-bold">Kayıt ve Rol Seçimi</h5>
+                    <p class="text-muted small mt-3">
+                        Kayıt olurken <strong>"Durak Sahibi"</strong> veya <strong>"Sürücü"</strong> olduğunuzu belirtin. Bu seçim ekranlarınızı belirler.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                <div class="card-body">
+                    <div class="step-number mx-auto">2</div>
+                    <h5 class="fw-bold">Durak Kurulumu</h5>
+                    <p class="text-muted small mt-3">
+                        <span class="badge bg-primary">Patronlar İçin</span><br>
+                        Sisteme giriş yapın ve <strong>"Durağı Kur"</strong> butonuyla kendi taksi durağınızı dijital ortamda oluşturun.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                <div class="card-body">
+                    <div class="step-number mx-auto">3</div>
+                    <h5 class="fw-bold">Başvuru ve Onay</h5>
+                    <p class="text-muted small mt-3">
+                        <span class="badge bg-info text-dark">Sürücüler İçin</span><br>
+                        Listeden çalışacağınız durağı seçip başvurun. Patron onaylayınca araçları görmeye başlarsınız.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                <div class="card-body">
+                    <div class="step-number mx-auto">4</div>
+                    <h5 class="fw-bold">Filo Yönetimi</h5>
+                    <p class="text-muted small mt-3">
+                        Araç ekleyin, KM takibi yapın, araçları teslim alıp verin. Her şey <strong>Kontrol Paneli</strong> üzerinden anlık yönetilir.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container text-center py-5">
+    <div class="p-5 bg-white rounded-3 shadow-sm border">
+        <h3 class="fw-bold">Hazır mısınız?</h3>
+        <p class="text-muted">Hemen ücretsiz hesabınızı oluşturun ve filonuzu profesyonelce yönetin.</p>
+        <a href="{% url 'kayit_ol' %}" class="btn btn-primary btn-lg px-5 shadow">
+            Hesap Oluştur 🚀
+        </a>
+    </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container">
+        <small class="opacity-50">&copy; 2026 Rota Asistanı | Yardım Merkezi</small>
+    </div>
+</footer>
+
+</body>
+</html>

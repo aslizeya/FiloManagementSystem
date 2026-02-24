@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aracı Teslim Et</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+
+<div class="card shadow p-4" style="max-width: 500px; width: 100%;">
+    <h3 class="text-danger mb-3">Aracı Teslim Et</h3>
+    <p><strong>Araç:</strong> {{ arac.plaka }}</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Son Kilometre (En az: {{ arac.guncel_km }})</label>
+            <input type="number" name="guncel_km" class="form-control" required min="{{ arac.guncel_km }}">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Notlar (Hasar, Arıza vb.)</label>
+            <textarea name="notlar" class="form-control" rows="3"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-danger w-100">Teslim Et ve Bitir</button>
+        <a href="{% url 'arac_listesi' %}" class="btn btn-secondary w-100 mt-2">İptal</a>
+    </form>
+</div>
+
+</body>
+</html>
